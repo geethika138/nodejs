@@ -1,0 +1,92 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.use(bodyParser.json());
+mongoose.connect('mongodb://localhost:27017/mydatabase', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+});
+const User = mongoose.model('User', userSchema);
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+app.post('/users', async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+
+OSSLAB@DESKTOP-BOBNJJQ MINGW64 ~ (main)
+$ touch index.js
+
+OSSLAB@DESKTOP-BOBNJJQ MINGW64 ~ (main)
+$ cat index.js
+
+OSSLAB@DESKTOP-BOBNJJQ MINGW64 ~ (main)
+$ node index.js
+
+OSSLAB@DESKTOP-BOBNJJQ MINGW64 ~ (main)
+$ npm init -y
+npm install express mongoose body-parser
+Wrote to C:\Users\OSSLAB\package.json:
+
+{
+  "name": "osslab",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+
+
+
+
+added 84 packages, and audited 85 packages in 25s
+
+13 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+OSSLAB@DESKTOP-BOBNJJQ MINGW64 ~ (main)
+$
+
+
+
+
+
+
+
+
+
+
